@@ -68,7 +68,7 @@ def create_tables(**kwargs):
 
 # Функция для получения погоды и записи в базу данных
 def fetch_and_store_weather(**kwargs):
-    date_time = datetime.now().strftime("%Y-%m-%dT%H:00:00")
+    date_time = (datetime.now() + timedelta(hours=3)).strftime("%Y-%m-%dT%H:00:00")
     
     postgres_hook = PostgresHook(postgres_conn_id='postgres_connect')
     conn = postgres_hook.get_conn()
@@ -90,7 +90,7 @@ def fetch_and_store_weather(**kwargs):
     for town in central_federal_district:
         url = f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{town}/{date_time}?key=LF4M3VUUE8JQ62CJPCES9UMTY&include=current&unitGroup=metric&lang=ru"
         response = requests.get(url)
-        
+        print(town)
         if response.status_code == 200:
             weather_data = response.json()
             
@@ -126,7 +126,7 @@ def process_weather_data(**kwargs):
         if current_conditions:
             data_id = str(uuid.uuid4())
             date_time = current_conditions.get("datetime", "")
-            date = datetime.fromtimestamp(current_conditions.get("datetimeEpoch", 0)).strftime("%Y-%m-%d")
+            date = weather_json["days"][0]["datetime"]
             temp = current_conditions.get("temp", None)
             feelslike = current_conditions.get("feelslike", None)
             humidity = current_conditions.get("humidity", None)
