@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: HGsiojnlkfiopwe9ifx*&$#**$
+    healthcheck:
+      test: ["CMD", "pg_isready", "-p","5433",-U", "postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    restart: always
+    hostname: pg14
+    expose:
+      - "5433"
+    ports:
+      - "5433:5433"
+    command: -p 5433
